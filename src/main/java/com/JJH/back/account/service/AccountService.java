@@ -66,7 +66,7 @@ public class AccountService {
 
                 accountRepository.save(check);
 
-                return ResponseMessage.builder().statusCode(HttpStatus.OK).message("로그인 성공!").nickName(check.getNickName()).userEmail(check.getEmail()).build();
+                return ResponseMessage.builder().statusCode(HttpStatus.OK).message("로그인 성공!").nickName(check.getNickName()).userEmail(check.getEmail()).id(check.getUserId()).build();
             } else {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
             }
