@@ -1,5 +1,6 @@
 package com.JJH.back.email.service;
 
+import com.JJH.back.account.repository.AccountRepository;
 import com.JJH.back.common.ResponseMessage;
 import com.JJH.back.email.controller.VerifyEmailController;
 import com.JJH.back.email.entity.EmailRequest;
@@ -26,7 +27,13 @@ public class VerifyEmailService {
 
     private final JavaMailSender javaMailSender;
     private final RedisUtill redisUtil;
+    private final AccountRepository accountRepository;
     private static final Logger logger = LoggerFactory.getLogger(VerifyEmailService.class);
+
+    public boolean isEmailAvailable(String email) {
+
+        return accountRepository.findByEmail(email) == null;
+    }
 
     @Transactional
     public ResponseEntity<ResponseMessage> authEmail(EmailRequest request) {

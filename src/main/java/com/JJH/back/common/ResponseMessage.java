@@ -15,5 +15,6 @@ public class ResponseMessage {
     private String id;
     private String nickName;
     private String userEmail;
+    private String tempYn;
 
 }

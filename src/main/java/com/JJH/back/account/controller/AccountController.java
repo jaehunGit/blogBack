@@ -17,7 +17,6 @@ public class AccountController {
     @PostMapping("/api/signUpUser")
     public ResponseEntity<ResponseMessage> SignUpUser(@RequestBody AccountEntity accountEntity, Error error) {
 
-
         return ResponseEntity.status(HttpStatus.OK).body(accountService.signUpUserService(accountEntity));
     }
 
@@ -32,4 +31,22 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(accountService.UserLoginService(accountEntity));
     }
 
+    @GetMapping("/api/findId")
+    public ResponseEntity<ResponseMessage> findId(@RequestParam("email") String email) {
+
+        ResponseMessage response = accountService.findUserIdByEmail(email);
+        return new ResponseEntity<>(response, response.getStatusCode());
+    }
+
+    @PostMapping("/api/findPassword")
+    public ResponseEntity<ResponseMessage> findPassword(@RequestBody AccountEntity accountEntity) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.findPassword(accountEntity));
+    }
+
+    @PostMapping("/api/changePassword")
+    public ResponseEntity<ResponseMessage> changePassword(@RequestBody AccountEntity accountEntity) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.changePassword(accountEntity));
+    }
 }

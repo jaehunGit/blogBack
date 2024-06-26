@@ -2,6 +2,7 @@ package com.JJH.back.account.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -32,4 +33,8 @@ public class AccountEntity {
 
     @Column(columnDefinition = "DATETIME comment '로그인 접속시간'", nullable = true)
     private LocalDateTime lastConnectedDateTime;
+
+    @Column(columnDefinition = "임시비밀번호 yn")
+    @ColumnDefault("n")
+    private String tempYn;
 }
