@@ -1,6 +1,7 @@
 package com.JJH.back.account.service;
 
 import com.JJH.back.account.entity.AccountEntity;
+import com.JJH.back.account.repository.AccountDTO;
 import com.JJH.back.account.repository.AccountRepository;
 import com.JJH.back.common.ResponseMessage;
 import com.JJH.back.email.service.EmailService;
@@ -80,7 +81,7 @@ public class AccountService {
         }
     }
 
-    public ResponseMessage findUserIdByEmail(String email) {
+    public ResponseMessage findUserIdByEmailService(String email) {
 
         AccountEntity userId = accountRepository.findUserIdByEmail(email);
 
@@ -97,7 +98,7 @@ public class AccountService {
         }
     }
 
-    public ResponseMessage findPassword(AccountEntity accountEntity) {
+    public ResponseMessage findPasswordService(AccountEntity accountEntity) {
 
         String userId = accountEntity.getUserId();
         String email = accountEntity.getEmail();
@@ -120,7 +121,7 @@ public class AccountService {
         return ResponseEntity.status(HttpStatus.OK).body(emailService.sendEmail(email, tempPassword)).getBody();
     }
 
-    public ResponseMessage changePassword(AccountEntity accountEntity) {
+    public ResponseMessage changePasswordService(AccountEntity accountEntity) {
         AccountEntity account = accountRepository.findByUserId(accountEntity.getUserId());
         if (account == null) {
             return ResponseMessage.builder()
@@ -137,5 +138,39 @@ public class AccountService {
                 .statusCode(HttpStatus.OK)
                 .message("비밀번호가 성공적으로 변경되었습니다.")
                 .build();
+    }
+
+    public ResponseMessage updateNickNameService(AccountEntity accountEntity) {
+        AccountEntity account = accountRepository.findByUserId(accountEntity.getUserId());
+
+        if(account == null) {
+            return ResponseMessage.builder()
+                    .statusCode(HttpStatus.NOT_FOUND)
+                    .message("해당 아이디가 존재하지 않습니다.")
+                    .build();
+        }
+
+        account.setNickName(accountEntity.getNickName());
+        accountRepository.save(account);
+
+        return ResponseMessage.builder().statusCode(HttpStatus.OK).message("닉네임 변경완료").nickName(account.getNickName()).build();
+    }
+
+    public ResponseMessage updatePassword(AccountDTO accountDTO) {
+        AccountEntity account = accountRepository.findByUserId(accountDTO.getUserId());
+
+        if (account != null) {
+            if (passwordEncoder.matches(accountDTO.getCurrentPassword(), account.getPassword())) {
+                account.setPassword(passwordEncoder.encode(accountDTO.getNewPassword()));
+                account.setLastConnectedDateTime(LocalDateTime.now());
+                accountRepository.save(account);
+
+                return ResponseMessage.builder().statusCode(HttpStatus.OK).message("비밀번호 변경완료").build();
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 아이디 입니다.");
+        }
     }
 }

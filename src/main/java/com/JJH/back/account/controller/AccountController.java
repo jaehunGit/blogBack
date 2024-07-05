@@ -1,6 +1,7 @@
 package com.JJH.back.account.controller;
 
 import com.JJH.back.account.entity.AccountEntity;
+import com.JJH.back.account.repository.AccountDTO;
 import com.JJH.back.account.service.AccountService;
 import com.JJH.back.common.ResponseMessage;
 import lombok.RequiredArgsConstructor;
@@ -34,19 +35,29 @@ public class AccountController {
     @GetMapping("/api/findId")
     public ResponseEntity<ResponseMessage> findId(@RequestParam("email") String email) {
 
-        ResponseMessage response = accountService.findUserIdByEmail(email);
+        ResponseMessage response = accountService.findUserIdByEmailService(email);
         return new ResponseEntity<>(response, response.getStatusCode());
     }
 
     @PostMapping("/api/findPassword")
     public ResponseEntity<ResponseMessage> findPassword(@RequestBody AccountEntity accountEntity) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(accountService.findPassword(accountEntity));
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.findPasswordService(accountEntity));
     }
 
     @PostMapping("/api/changePassword")
     public ResponseEntity<ResponseMessage> changePassword(@RequestBody AccountEntity accountEntity) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(accountService.changePassword(accountEntity));
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.changePasswordService(accountEntity));
+    }
+
+    @PostMapping("/api/updateNickName")
+    public ResponseEntity<ResponseMessage> updateNickName(@RequestBody AccountEntity accountEntity) {
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.updateNickNameService(accountEntity));
+    }
+
+    @PostMapping("/api/updatePassword")
+    public  ResponseEntity<ResponseMessage> updatePassword(@RequestBody AccountDTO accountDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.updatePassword(accountDTO));
     }
 }
